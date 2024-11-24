@@ -1,0 +1,123 @@
+package Control;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public class MarcoMetadatos extends JFrame {
+    private MetadatosJuego metadatos;
+    private static JTextField campoEvento;
+    private static JTextField campoSitio;
+    private static JTextField campoFecha;
+    private static JTextField campoRonda;
+    private static JTextField campoJugadorBlanco;
+    private static JTextField campoJugadorNegro;
+    private static JTextField campoResultado;
+    private JTextArea areaMetadatos;
+
+    public MarcoMetadatos(MetadatosJuego metadatos) {
+        this.metadatos = metadatos;
+        initUI();
+    }
+
+    private void initUI() {
+        configurarVentana();
+        JPanel panelFormulario = crearPanelFormulario();
+        JScrollPane scrollPane = crearAreaMetadatos();
+        agregarComponentes(panelFormulario, scrollPane);
+    }
+
+    private void configurarVentana() {
+        setTitle("Metadatos de la Partida de Ajedrez");
+        setSize(600, 700);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+    }
+
+    private JPanel crearPanelFormulario() {
+        JPanel panel = new JPanel(new GridLayout(8, 2, 10, 10));
+
+        // Crear campos
+        inicializarCampos();
+
+        // Agregar campos
+        agregarCamposAlFormulario(panel);
+
+        // Agregar botones
+        agregarBotonesAlFormulario(panel);
+
+        return panel;
+    }
+
+    private void inicializarCampos() {
+        campoEvento = new JTextField(metadatos.obtenerEvento());
+        campoSitio = new JTextField(metadatos.obtenerSitio());
+        campoFecha = new JTextField(metadatos.obtenerFecha());
+        campoRonda = new JTextField(metadatos.obtenerRonda());
+        campoJugadorBlanco = new JTextField(metadatos.obtenerJugadorBlanco());
+        campoJugadorNegro = new JTextField(metadatos.obtenerJugadorNegro());
+        campoResultado = new JTextField(metadatos.obtenerResultado());
+    }
+
+    private void agregarCamposAlFormulario(JPanel panel) {
+        panel.add(new JLabel("Evento:"));
+        panel.add(campoEvento);
+        panel.add(new JLabel("Sitio:"));
+        panel.add(campoSitio);
+        panel.add(new JLabel("Fecha (YYYY.MM.DD):"));
+        panel.add(campoFecha);
+        panel.add(new JLabel("Ronda:"));
+        panel.add(campoRonda);
+        panel.add(new JLabel("Jugador Blanco:"));
+        panel.add(campoJugadorBlanco);
+        panel.add(new JLabel("Jugador Negro:"));
+        panel.add(campoJugadorNegro);
+        panel.add(new JLabel("Resultado:"));
+        panel.add(campoResultado);
+    }
+
+    private void agregarBotonesAlFormulario(JPanel panel) {
+        JButton botonGuardar = new JButton("Guardar");
+        JButton botonMostrar = new JButton("Mostrar Metadatos");
+
+        botonGuardar.addActionListener(e -> guardarMetadatos());
+        botonMostrar.addActionListener(e -> mostrarMetadatos());
+
+        panel.add(botonGuardar);
+        panel.add(botonMostrar);
+    }
+
+    private JScrollPane crearAreaMetadatos() {
+        areaMetadatos = new JTextArea();
+        areaMetadatos.setEditable(false);
+        return new JScrollPane(areaMetadatos);
+    }
+
+    private void agregarComponentes(JPanel panelFormulario, JScrollPane scrollPane) {
+        add(panelFormulario, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+    }
+
+    private void guardarMetadatos() {
+        metadatos.establecerEvento(campoEvento.getText());
+        metadatos.establecerSitio(campoSitio.getText());
+        metadatos.establecerFecha(campoFecha.getText());
+        metadatos.establecerRonda(campoRonda.getText());
+        metadatos.establecerJugadorBlanco(campoJugadorBlanco.getText());
+        metadatos.establecerJugadorNegro(campoJugadorNegro.getText());
+        metadatos.establecerResultado(campoResultado.getText());
+        JOptionPane.showMessageDialog(this, "¡Metadatos guardados exitosamente!");
+    }
+
+    private void mostrarMetadatos() {
+        areaMetadatos.setText(metadatos.toString());
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            MetadatosJuego metadatos = new MetadatosJuego("", "", "", "", "", "", "");
+            MarcoMetadatos marco = new MarcoMetadatos(metadatos);
+            marco.setVisible(true);
+        });
+    }
+}
